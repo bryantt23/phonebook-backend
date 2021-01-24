@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 
-const persons = [
+let persons = [
   {
     name: 'Arto Hellas',
     number: '040-123456',
@@ -21,6 +21,11 @@ const persons = [
     name: 'Mary Poppendieck',
     number: '39-23-6423122',
     id: 4
+  },
+  {
+    name: 'Delete Me',
+    number: '39-23-6423122',
+    id: 5
   }
 ];
 
@@ -34,6 +39,17 @@ app.get('/api/persons/:id', function (req, res) {
   const person = persons.find(person => person.id === id);
   if (person) {
     res.send(person);
+  } else {
+    res.status(404).send('Not found');
+  }
+});
+
+app.delete('/api/persons/:id', function (req, res) {
+  const id = Number(req.params.id);
+  const personIndex = persons.findIndex(person => person.id === id);
+  if (personIndex > -1) {
+    persons.splice(personIndex, 1);
+    res.redirect('/api/persons');
   } else {
     res.status(404).send('Not found');
   }
