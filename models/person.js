@@ -1,4 +1,12 @@
+require('dotenv').config();
+
 const mongoose = require('mongoose');
+const mongoDb = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qx7so.mongodb.net/persons?retryWrites=true&w=majority`;
+mongoose.connect(mongoDb, { useUnifiedTopology: true, useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'mongo connection error'));
+
+// const mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
