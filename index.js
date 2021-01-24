@@ -49,14 +49,25 @@ app.post('/api/persons', function (req, res) {
 });
 
 app.get('/api/persons/:id', function (req, res) {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   console.log('person id', id);
-  const person = persons.find(person => person.id === id);
-  if (person) {
-    res.send(person);
-  } else {
-    res.status(404).send({ error: 'Not found' });
-  }
+
+  Person.findOne({ _id: id }, (err, person) => {
+    if (!person) {
+      return res.status(404).send({ error: 'Not found' });
+    }
+    if (err) {
+      return res.status(404).send({ error: err });
+    }
+    return res.send(person);
+  });
+
+  // const person = persons.find(person => person.id === id);
+  // if (person) {
+  //   res.send(person);
+  // } else {
+  //   res.status(404).send({ error: 'Not found' });
+  // }
 });
 
 app.delete('/api/persons/:id', function (req, res) {
