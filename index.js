@@ -3,11 +3,16 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 var morgan = require('morgan');
-app.use(morgan('tiny'));
+morgan.token('body', (req, res) => JSON.stringify(req.body));
 
-morgan.token('host', function (req, res) {
-  return req.hostname;
-});
+// https://stackoverflow.com/a/55848217
+app.use(
+  morgan(':method :url :status :res[content-length] :body - :response-time ms')
+);
+
+// morgan.token('host', function (req, res) {
+//   return req.hostname;
+// });
 
 let persons = [
   {
