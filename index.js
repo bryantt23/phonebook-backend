@@ -2,6 +2,12 @@ const express = require('express');
 // https://stackoverflow.com/a/58494537
 const app = express();
 app.use(express.json());
+var morgan = require('morgan');
+app.use(morgan('tiny'));
+
+morgan.token('host', function (req, res) {
+  return req.hostname;
+});
 
 let persons = [
   {
@@ -32,6 +38,7 @@ let persons = [
 ];
 
 app.get('/api/persons', function (req, res) {
+  console.log('get all');
   res.json(persons);
 });
 
@@ -58,12 +65,12 @@ app.post('/api/persons', function (req, res) {
 
 app.get('/api/persons/:id', function (req, res) {
   const id = Number(req.params.id);
-  console.log(id);
+  console.log('person id', id);
   const person = persons.find(person => person.id === id);
   if (person) {
     res.send(person);
   } else {
-    res.status(404).send('Not found');
+    res.status(404).send({ error: 'Not found' });
   }
 });
 
@@ -74,7 +81,7 @@ app.delete('/api/persons/:id', function (req, res) {
     persons.splice(personIndex, 1);
     res.redirect('/api/persons');
   } else {
-    res.status(404).send('Not found');
+    res.status(404).send({ error: 'Not found' });
   }
 });
 
