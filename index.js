@@ -1,7 +1,11 @@
 const express = require('express');
 // https://stackoverflow.com/a/58494537
+const cors = require('cors');
+
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 var morgan = require('morgan');
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 
