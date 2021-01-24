@@ -28,4 +28,14 @@ app.get('/api/persons', function (req, res) {
   res.json(persons);
 });
 
+app.get('/info', function (req, res) {
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+  const message = `Phonebook has info for ${persons.length} people
+  <br/>
+    ${today.toUTCString()}`;
+
+  res.send(message);
+});
+
 app.listen(3001);
