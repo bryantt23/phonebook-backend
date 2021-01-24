@@ -1,5 +1,7 @@
 const express = require('express');
+// https://stackoverflow.com/a/58494537
 const app = express();
+app.use(express.json());
 
 let persons = [
   {
@@ -31,6 +33,19 @@ let persons = [
 
 app.get('/api/persons', function (req, res) {
   res.json(persons);
+});
+
+function getRandomArbitrary(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+app.post('/api/persons', function (req, res) {
+  //   console.log(req.body);
+  const { name, number } = req.body;
+  console.log(name + ' ' + number);
+  let index = getRandomArbitrary(100, 10000000);
+  persons.push({ name, number, id: index });
+  res.redirect('/api/persons');
 });
 
 app.get('/api/persons/:id', function (req, res) {
