@@ -40,8 +40,16 @@ function getRandomArbitrary(min, max) {
 }
 
 app.post('/api/persons', function (req, res) {
-  //   console.log(req.body);
+  if (!req.body.name) {
+    return res.send({ error: 'Missing name' });
+  }
+  if (!req.body.number) {
+    return res.send({ error: 'Missing number' });
+  }
   const { name, number } = req.body;
+  if (persons.find(person => person.name === name)) {
+    return res.send({ error: 'Name must be unique' });
+  }
   console.log(name + ' ' + number);
   let index = getRandomArbitrary(100, 10000000);
   persons.push({ name, number, id: index });
