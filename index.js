@@ -28,6 +28,17 @@ app.get('/api/persons', function (req, res) {
   res.json(persons);
 });
 
+app.get('/api/persons/:id', function (req, res) {
+  const id = Number(req.params.id);
+  console.log(id);
+  const person = persons.find(person => person.id === id);
+  if (person) {
+    res.send(person);
+  } else {
+    res.status(404).send('Not found');
+  }
+});
+
 app.get('/info', function (req, res) {
   const timeElapsed = Date.now();
   const today = new Date(timeElapsed);
