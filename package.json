@@ -6,6 +6,7 @@
   "scripts": {
     "start:dev": "nodemon index.js",
     "start": "node index.js",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,5 +19,8 @@
     "mongoose": "^5.11.13",
     "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0"
   }
 }

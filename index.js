@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
+
 const Person = require('./models/person');
 const express = require('express');
 // https://stackoverflow.com/a/58494537
