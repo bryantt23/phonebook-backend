@@ -41,12 +41,9 @@ app.get('/api/persons', async function (req, res) {
   res.json(data);
 });
 
-app.post('/api/persons', async function (req, res) {
-  if (!req.body.name) {
-    return res.send({ error: 'Missing name' });
-  }
+app.post('/api/persons', async function (req, res, next) {
   if (!req.body.number) {
-    return res.send({ error: 'Missing number' });
+    return res.status(400).send({ error: 'Missing number' });
   }
   const { name, number } = req.body;
 
@@ -54,14 +51,12 @@ app.post('/api/persons', async function (req, res) {
     name,
     number
   });
-  await newPerson.save(err => {
-    if (err) {
-      return res.send({ error: err });
-    }
-    console.log('User has been added with ' + name + ' ' + number);
-
-    res.redirect('/api/persons');
+  await newPerson.save().catch(err => {
+    return res.status(400).send(err.message);
   });
+  console.log('User has been added with ' + name + ' ' + number);
+
+  res.redirect('/api/persons');
 });
 
 app.get('/api/persons/:id', function (req, res) {
