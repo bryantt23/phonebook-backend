@@ -77,6 +77,22 @@ app.get('/api/persons/:id', function (req, res) {
   });
 });
 
+  const number = req.body.number;
+
+  const updatedPerson = await Person.findById(id).catch(err => {
+    console.log('err', err);
+    next(err);
+  });
+  updatedPerson.number = number;
+  updatedPerson.save().catch(function (err) {
+    console.log('err', err);
+    next(err);
+  });
+  return res.send({
+    message: `updated person: ${updatedPerson}, number to ${number}`
+  });
+});
+
 // https://stackoverflow.com/questions/5809788/how-do-i-remove-documents-using-node-js-mongoose
 app.delete('/api/persons/:id', async function (req, res, next) {
   const id = req.params.id;
@@ -84,7 +100,7 @@ app.delete('/api/persons/:id', async function (req, res, next) {
   //command and chain catch
   const deletedItem = await Person.findOneAndDelete({ _id: id }).catch(err => {
     console.log('err', err);
-    next(err);
+    return next(err);
     // return res.status(404).send({ error: err });
   });
 
