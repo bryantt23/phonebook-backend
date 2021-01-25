@@ -27,11 +27,7 @@ app.get('/api/persons', async function (req, res) {
   res.json(data);
 });
 
-function getRandomArbitrary(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
-app.post('/api/persons', function (req, res) {
+app.post('/api/persons', async function (req, res) {
   if (!req.body.name) {
     return res.send({ error: 'Missing name' });
   }
@@ -39,13 +35,19 @@ app.post('/api/persons', function (req, res) {
     return res.send({ error: 'Missing number' });
   }
   const { name, number } = req.body;
-  if (persons.find(person => person.name === name)) {
-    return res.send({ error: 'Name must be unique' });
-  }
-  console.log(name + ' ' + number);
-  let index = getRandomArbitrary(100, 10000000);
-  persons.push({ name, number, id: index });
-  res.redirect('/api/persons');
+
+  let newPerson = new Person({
+    name,
+    number
+  });
+  await newPerson.save(err => {
+    if (err) {
+      return res.send({ error: err });
+    }
+    console.log('User has been added with ' + name + ' ' + number);
+
+    res.redirect('/api/persons');
+  });
 });
 
 app.get('/api/persons/:id', function (req, res) {
@@ -61,13 +63,6 @@ app.get('/api/persons/:id', function (req, res) {
     }
     return res.send(person);
   });
-
-  // const person = persons.find(person => person.id === id);
-  // if (person) {
-  //   res.send(person);
-  // } else {
-  //   res.status(404).send({ error: 'Not found' });
-  // }
 });
 
 app.delete('/api/persons/:id', function (req, res) {

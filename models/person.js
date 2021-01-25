@@ -15,8 +15,7 @@ const PersonInstanceSchema = new Schema({
     type: String,
     required: true,
     minlength: 3,
-    maxlength: 100,
-    unique: true
+    maxlength: 100
   },
   number: {
     type: String
