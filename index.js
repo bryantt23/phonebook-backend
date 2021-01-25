@@ -65,15 +65,19 @@ app.get('/api/persons/:id', function (req, res) {
   });
 });
 
-app.delete('/api/persons/:id', function (req, res) {
-  const id = Number(req.params.id);
-  const personIndex = persons.findIndex(person => person.id === id);
-  if (personIndex > -1) {
-    persons.splice(personIndex, 1);
-    res.redirect('/api/persons');
-  } else {
-    res.status(404).send({ error: 'Not found' });
-  }
+// https://stackoverflow.com/questions/5809788/how-do-i-remove-documents-using-node-js-mongoose
+app.delete('/api/persons/:id', async function (req, res, next) {
+  const id = req.params.id;
+
+  //command and chain catch
+  const deletedItem = await Person.findOneAndDelete({ _id: id }).catch(err => {
+    console.log('err', err);
+    return res.status(404).send({ error: err });
+  });
+
+  //if it gets here it succeeded
+  console.log('deleted id ' + id);
+  res.status(200).send({ message: 'deleted ' + deletedItem });
 });
 
 app.get('/info', function (req, res) {
