@@ -77,6 +77,8 @@ app.get('/api/persons/:id', function (req, res) {
   });
 });
 
+app.put('/api/persons/:id', async function (req, res) {
+  const id = req.body._id;
   const number = req.body.number;
 
   const updatedPerson = await Person.findById(id).catch(err => {
