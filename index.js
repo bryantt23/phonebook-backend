@@ -11,6 +11,18 @@ app.use(express.static('build'));
 var morgan = require('morgan');
 morgan.token('body', (req, res) => JSON.stringify(req.body));
 
+const errorHandler = (error, request, response, next) => {
+  console.error('error handler section', error.message);
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
+
 // https://stackoverflow.com/a/55848217
 app.use(
   morgan(':method :url :status :res[content-length] :body - :response-time ms')
@@ -72,7 +84,8 @@ app.delete('/api/persons/:id', async function (req, res, next) {
   //command and chain catch
   const deletedItem = await Person.findOneAndDelete({ _id: id }).catch(err => {
     console.log('err', err);
-    return res.status(404).send({ error: err });
+    next(err);
+    // return res.status(404).send({ error: err });
   });
 
   //if it gets here it succeeded
